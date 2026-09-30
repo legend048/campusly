@@ -2348,7 +2348,11 @@ kbd {
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: 0 24px 100px #00000038;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.modal::-webkit-scrollbar {
+  display: none;
 }
 .modal::backdrop {
   background: #0d1c1680;
