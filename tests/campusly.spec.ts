@@ -63,11 +63,16 @@ test('registration, download, duplicate prevention and cancellation work', async
   await page.getByRole('button', { name: 'Close dialog' }).click()
   await page.getByRole('button', { name: /My tickets/ }).click()
   await page.getByRole('button', { name: 'Cancel registration', exact: true }).click()
-  await page.getByRole('dialog').getByRole('button', { name: 'Cancel registration', exact: true }).click()
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: 'Cancel registration', exact: true })
+    .click()
   await expect(page.getByText('Let’s put something on the calendar.')).toBeVisible()
 })
 
-test('event creation, edit, registration, attendee export and delete stay consistent', async ({ page }) => {
+test('event creation, edit, registration, attendee export and delete stay consistent', async ({
+  page,
+}) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Host an event', exact: true }).click()
   await page.getByLabel('Event name').fill('Campus Maker Night')
@@ -76,7 +81,9 @@ test('event creation, edit, registration, attendee export and delete stay consis
   await page.getByLabel('Date', { exact: true }).fill('2027-11-10')
   await page.getByLabel('Venue', { exact: true }).fill('Engineering Studio')
   await page.getByLabel('Capacity', { exact: true }).fill('1')
-  await page.getByLabel('Tell people about it').fill('Build your next creative project with friends at our hands-on campus maker night.')
+  await page
+    .getByLabel('Tell people about it')
+    .fill('Build your next creative project with friends at our hands-on campus maker night.')
   await page.getByRole('button', { name: 'Publish event' }).click()
   await expect(page.locator('.hosted-row')).toHaveCount(1)
   await page.getByRole('button', { name: 'Edit Campus Maker Night', exact: true }).click()
@@ -91,7 +98,9 @@ test('event creation, edit, registration, attendee export and delete stay consis
   await expect(page.locator('.stat-card').nth(1).locator('strong')).toHaveText('1')
   await expect(page.locator('.stat-card').nth(2).locator('strong')).toHaveText('0')
   const download = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export attendees for Campus Maker Evening', exact: true }).click()
+  await page
+    .getByRole('button', { name: 'Export attendees for Campus Maker Evening', exact: true })
+    .click()
   expect((await download).suggestedFilename()).toContain('attendees.csv')
   await page.getByRole('button', { name: 'Delete Campus Maker Evening', exact: true }).click()
   await page.getByRole('button', { name: 'Delete event', exact: true }).click()
@@ -114,7 +123,9 @@ test('calendar and community filters work', async ({ page }) => {
   await page.getByRole('button', { name: /My communities/ }).click()
   await expect(page.locator('.club-card')).toHaveCount(1)
   await page.reload()
-  await expect(page.locator('.club-card').first().getByRole('button', { name: 'Joined', exact: true })).toBeVisible()
+  await expect(
+    page.locator('.club-card').first().getByRole('button', { name: 'Joined', exact: true }),
+  ).toBeVisible()
   await page.getByRole('button', { name: 'View events by Developer Student Club' }).click()
   await expect(page.locator('.event-card')).toHaveCount(1)
   await expect(page.locator('.event-card h3')).toHaveText('Hack the Future 2026')
@@ -138,7 +149,9 @@ test('profile, keyboard search, notifications and help work', async ({ page }) =
   await expect(page.locator('.notifications-panel')).toHaveCount(0)
   await page.getByRole('button', { name: 'A little help?' }).click()
   await page.getByText('Where are my details saved?', { exact: true }).click()
-  await expect(page.getByText('This is an interactive campus demo.', { exact: false })).toBeVisible()
+  await expect(
+    page.getByText('This is an interactive campus demo.', { exact: false }),
+  ).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)
 })
@@ -147,11 +160,17 @@ for (const width of [360, 768, 1440]) {
   test(`responsive layout has no overflow at ${width}px and images load`, async ({ page }) => {
     await page.setViewportSize({ width, height: 950 })
     const errors: string[] = []
-    page.on('pageerror', error => errors.push(error.message))
+    page.on('pageerror', (error) => errors.push(error.message))
     await page.goto('/')
-    await page.waitForFunction(() => [...document.images].filter(image => image.loading !== 'lazy').every(image => image.complete && image.naturalWidth > 0))
+    await page.waitForFunction(() =>
+      [...document.images]
+        .filter((image) => image.loading !== 'lazy')
+        .every((image) => image.complete && image.naturalWidth > 0),
+    )
     await expect(page.locator('body')).toBeVisible()
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy()
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+    ).toBeTruthy()
     if (width < 901) {
       await page.getByRole('button', { name: 'Open navigation' }).click()
       await expect(page.locator('.sidebar')).toHaveClass(/open/)
@@ -162,7 +181,10 @@ for (const width of [360, 768, 1440]) {
     for (const route of ['calendar', 'clubs', 'tickets', 'dashboard']) {
       await page.goto('/#' + route)
       await expect(page.locator('h1')).toBeVisible()
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${route} overflow at ${width}`).toBeTruthy()
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        `${route} overflow at ${width}`,
+      ).toBeTruthy()
     }
     expect(errors).toEqual([])
   })
