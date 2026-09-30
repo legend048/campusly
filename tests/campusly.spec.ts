@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-09-30T08:00:00+05:30'))
+})
+
 test('discovery search, category, filters and views work', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('.event-card')).toHaveCount(7)

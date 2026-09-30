@@ -43,7 +43,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Playwright checks discovery, search, filtering, bookmarks, theme persistence, registration, ticket/calendar downloads, cancellation, creation/edit/deletion, attendee export, calendar, communities, profile, keyboard interaction, reduced motion, and 360/768/1440px layouts. The test runner starts Vite automatically when needed.
+Playwright checks discovery, search, filtering, bookmarks, theme persistence, registration, ticket/calendar downloads, cancellation, creation/edit/deletion, attendee export, calendar, communities, profile, keyboard interaction, reduced motion, and 360/768/1440px layouts. The test runner starts Vite automatically on port 5174 when needed, uses installed Chrome on Windows when available, and fixes the browser clock to the demo semester for repeatable checks. Set `PLAYWRIGHT_CHANNEL` to choose a different installed browser channel.
 
 ## Main files
 
