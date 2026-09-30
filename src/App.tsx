@@ -82,7 +82,7 @@ const readPage = (): Page => {
 const fallbackProfile = {
   name: 'Alex Morgan',
   email: 'alex@northwood.edu',
-  course: 'Computer Science · Year 2',
+  course: 'Computer Science · Year 4',
   campus: 'Northwood University',
 }
 
